@@ -10,7 +10,6 @@ def get_args() -> argparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument("action", type=str, choices=["run", "init", "test"])
         parser.add_argument("day", type=int)
-        parser.add_argument("--part", type=int, choices={1, 2}, default=1)
         return parser.parse_args()
 
 
@@ -52,13 +51,14 @@ def test(args: argparse.Namespace) -> None:
     inputs = get_input("./tests", args.day, "test")
 
     if len(inputs) == 0:
-        raise ValueError("No tests found; run `init` first?")
-    for file in inputs:
-        if len(file) == 0:
-            raise ValueError("One or more empty test files")
+        raise ValueError("No tests found; run `init` first? Are they all empty?")
+
+    inputs = [f for f in inputs if len(f) > 0]
+    if len(inputs) == 0:
+        raise ValueError("All the files are empty")
 
     day_instance: Day = day_class(args.day, inputs, None)
-    day_instance.run(args.part)
+    day_instance.run()
 
 
 def init(args: argparse.Namespace) -> None:
@@ -101,7 +101,7 @@ def run(args: argparse.Namespace) -> None:
         raise ValueError("Empty input file")
 
     day_instance: Day = day_class(args.day, None, input)
-    day_instance.run(args.part)
+    day_instance.run()
 
 
 def main(args: argparse.Namespace) -> None:

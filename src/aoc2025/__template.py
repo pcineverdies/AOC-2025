@@ -1,10 +1,12 @@
 from typing import Any
 from .utils.day import Day
+from .utils import aoc
 
 class DayXX(Day):
 
-    def part_1(self, _input: str) -> Any:
-        return super().part_1(_input)
+    def day(self, _input: str) -> Any:
+        for line in aoc.yield_line(_input):
+            pass
 
-    def part_2(self, _input: str) -> Any:
-        return super().part_2(_input)
+        return (self.ans1, self.ans2)
+
