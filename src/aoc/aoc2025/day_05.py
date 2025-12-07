@@ -1,6 +1,6 @@
 from typing import Any
-from .utils.day import Day
-from .utils import aoc
+from ..utils.day import Day
+from ..utils import aoc
 
 def no_overlaps(ranges: list[list[int]]) -> list[list[int]]:
     ranges = sorted(ranges, key=lambda x: x[0])

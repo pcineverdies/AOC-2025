@@ -1,6 +1,6 @@
 from typing import Any
-from .utils.day import Day
-from .utils import aoc
+from ..utils.day import Day
+from ..utils import aoc
 
 def can_be_removed(matrix: aoc.Matrix) -> list[aoc.Coordinate]:
     result = []

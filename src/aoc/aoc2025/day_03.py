@@ -1,6 +1,6 @@
 from typing import Any
-from .utils.day import Day
-from .utils import aoc
+from ..utils.day import Day
+from ..utils import aoc
 
 def find_largest(ll: list[int], size: int) -> int:
     result, search_left = 0, 0

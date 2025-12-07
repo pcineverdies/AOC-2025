@@ -9,14 +9,15 @@ from .utils.day import Day
 def get_args() -> argparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument("action", type=str, choices=["run", "init", "test"])
+        parser.add_argument("year", type=int)
         parser.add_argument("day", type=int)
         return parser.parse_args()
 
 
-def get_input(dir: str, day_number: int, prefix: str) -> list[str]:
+def get_input(dir: str, year: int, day_number: int, prefix: str) -> list[str]:
 
     day_string = str(day_number) if day_number > 9 else f"0{day_number}"
-    pattern = re.compile(fr"{prefix}_{day_string}.*")
+    pattern = re.compile(fr"{prefix}_{year}_{day_string}.*")
 
     test_inputs: list[str] = []
 
@@ -28,27 +29,28 @@ def get_input(dir: str, day_number: int, prefix: str) -> list[str]:
     return test_inputs
 
 
-def get_day_class(day_number: int) -> Type[Day]:
+def get_day_class(year_number: int, day_number: int) -> Type[Day]:
 
     day_string = str(day_number) if day_number > 9 else f"0{day_number}"
     day_module_name = f"day_{day_string}"
+    folder_name = f"aoc20{year_number}"
 
     try:
-        day_module = importlib.import_module(f".{day_module_name}", package=__package__)
+        day_module = importlib.import_module(f".{folder_name}.{day_module_name}", package=__package__)
     except ModuleNotFoundError:
-        raise ModuleNotFoundError(f"Error: Module '{day_module_name}' not found.")
+        raise ModuleNotFoundError(f"Error: Module '.{folder_name}.{day_module_name}' not found.")
 
     try:
         day_class = getattr(day_module, f"Day{day_string}")
     except AttributeError:
-        raise ModuleNotFoundError(f"Error: Class 'Day{day_string}' not found in '{day_module_name}'.")
+        raise ModuleNotFoundError(f"Error: Class 'Day{day_string}' not found in '{folder_name}.{day_module_name}'.")
 
     return day_class
 
 
 def test(args: argparse.Namespace) -> None:
-    day_class = get_day_class(args.day)
-    inputs = get_input("./tests", args.day, "test")
+    day_class = get_day_class(args.year, args.day)
+    inputs = get_input("./tests", args.year, args.day, "test")
 
     if len(inputs) == 0:
         raise ValueError("No tests found; run `init` first? Are they all empty?")
@@ -66,9 +68,9 @@ def init(args: argparse.Namespace) -> None:
     day_string = str(args.day) if args.day > 9 else f"0{args.day}"
 
     files = [
-        Path(f"input/test_{day_string}.txt"),
-        Path(f"tests/test_{day_string}_1.txt"),
-        Path(f"tests/test_{day_string}_2.txt"),
+        Path(f"input/test_{args.year}_{day_string}.txt"),
+        Path(f"tests/test_{args.year}_{day_string}_1.txt"),
+        Path(f"tests/test_{args.year}_{day_string}_2.txt"),
     ]
 
     for file in files:
@@ -77,12 +79,12 @@ def init(args: argparse.Namespace) -> None:
             file.touch()
             print(f"+ -- Created {file}")
 
-    file = Path(f"src/aoc2025/day_{day_string}.py")
+    file = Path(f"src/aoc/aoc20{args.year}/day_{day_string}.py")
 
     file.parent.mkdir(parents=True, exist_ok=True)
     if not file.exists():
         file.touch()
-        template = Path("src/aoc2025/__template.py")
+        template = Path("src/aoc/__template.py")
         content = template.read_text(encoding="utf-8")
         content = content.replace("XX", day_string)
         file.write_text(content, encoding="utf-8")
@@ -90,9 +92,9 @@ def init(args: argparse.Namespace) -> None:
 
 
 def run(args: argparse.Namespace) -> None:
-    day_class = get_day_class(args.day)
+    day_class = get_day_class(args.year, args.day)
 
-    inputs = get_input("./input", args.day, "test")
+    inputs = get_input("./input", args.year, args.day, "test")
 
     if len(inputs) != 1:
         raise ValueError("Expected one input file; run `init` first?")

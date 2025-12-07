@@ -1,6 +1,6 @@
 from typing import Any
-from .utils.day import Day
-from .utils import aoc
+from ..utils.day import Day
+from ..utils import aoc
 
 def operation_from_matrix(matrix: list[list[str]], is_mul: bool) -> int:
     result = 1 if is_mul else 0

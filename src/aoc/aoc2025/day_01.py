@@ -1,6 +1,6 @@
 from typing import Any
-from .utils.day import Day
-from .utils import aoc
+from ..utils.day import Day
+from ..utils import aoc
 
 class Day01(Day):
 

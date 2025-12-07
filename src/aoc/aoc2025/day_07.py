@@ -1,8 +1,8 @@
 # type: ignore
 from functools import lru_cache
 from typing import Any
-from .utils.day import Day
-from .utils import aoc
+from ..utils.day import Day
+from ..utils import aoc
 
 @lru_cache(maxsize=10000)
 def find_timelines(c: aoc.Coordinate, use_visited) -> int:
